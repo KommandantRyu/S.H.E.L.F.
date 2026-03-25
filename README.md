@@ -1,6 +1,6 @@
 System Hub for Efficient Library Functions
 
- Library System is a web-based application designed to manage and organize book collections efficiently. It allows users to browse, search, and track reading materials while providing administrators with tools to manage inventory, users, and borrowing records.
+S.H.E.L.F. is a web-based application designed to manage and organize book collections efficiently. It allows users to browse, search, and track reading materials while providing administrators with tools to manage inventory, users, and borrowing records.
 
 The system focuses on simplicity, accessibility, and structured data management, making it ideal for schools and small libraries transitioning to a digital platform.
 
