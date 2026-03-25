@@ -5,11 +5,17 @@ W.O.R.M. Library System is a web-based application designed to manage and organi
 The system focuses on simplicity, accessibility, and structured data management, making it ideal for schools and small libraries transitioning to a digital platform.
 
 🚀 Features
+
 📖 Book cataloging and classification
+
 🔍 Search and filtering system
+
 👤 User account management
+
 📊 Borrowing and return tracking
+
 🗂️ Organized digital records
+
 🎯 Purpose
 
 W.O.R.M. aims to simplify library operations and improve access to knowledge through a clean and user-friendly interface.
