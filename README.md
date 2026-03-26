@@ -4,18 +4,12 @@ S.H.E.L.F. is a web-based application designed to manage and organize book colle
 
 The system focuses on simplicity, accessibility, and structured data management, making it ideal for schools and small libraries transitioning to a digital platform.
 
-🚀 Features
-
+🚀 Features:
 📖 Book cataloging and classification
-
 🔍 Search and filtering system
-
 👤 User account management
-
 📊 Borrowing and return tracking
-
 🗂️ Organized digital records
 
-🎯 Purpose
-
+🎯 Purpose:
 S.H.E.L.F. aims to simplify library operations and improve access to knowledge through a clean and user-friendly interface.

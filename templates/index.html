@@ -1,29 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-  <header class="main-header">
-    <a href="">Home</a>
-    <a href="">Books</a>
-    <a href="">Sign In</a>
-    <a href="">Sign Up</a>
-  </header>
 
-  <div class="body">
-    <h1>Welcome to The Library of Ruina</h1>
-    <p>The Only Library You'll Ever Need</p>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>W.O.R.M. Library System</title>
+  <link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css')}}">
+</head>
+
+<body>
+  <nav>
+    <div class="nav-brand">W.O.R.M. Library</div>
+    <div class="nav-links" id="navLinks"></div>
+  </nav>
+
+  <div class="container" id="app">
+    <div id="view"></div>
   </div>
 
-  <form action="" method = "post">
-    <label for="email">Email:</label>
-    <input type = "text" id = "email" name = "email" placeholder = "Ex: email@gmail.com">
-    <label for="password">Password:</label>
-    <input type = "password" id = "password" name = "password" placeholder = "Ex: password123">
-    <button type = "submit">Sign In</button>
-  </form>
+  <script src="{{url_for('static', filename = 'js/script.js')}}"></script>
 </body>
+
 </html>

@@ -5,10 +5,6 @@ from db import get_connection
 
 main_bp = Blueprint('main', __name__)
 
-@main_bp.route('/', methods=['GET'])
-def home():
-    return jsonify({'message': 'Welcome to the Library Management System'})
-
 @main_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()

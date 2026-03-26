@@ -22,6 +22,7 @@
             <th>Year Published</th>
             <th>Pages</th>
             <th>ISBN</th>
+            <th>Price</th>
         </tr>
         {% for book in books %}
         <tr>
@@ -31,6 +32,7 @@
             <td>{{ book.year_published }}</td>
             <td>{{ book.pages }}</td>
             <td>{{ book.isbn }}</td>
+            <td>{{book.price}}</td>
         </tr>
         {% endfor %}
     </table>

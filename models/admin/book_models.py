@@ -10,7 +10,8 @@ DEFAULT_SORT_ORDER = 'ASC'
 def get_all_books():
     try:
         cursor.execute("SELECT * FROM books")
-        return cursor.fetchall()
+        books = cursor.fetechall()
+        return books
     except Exception as e:
         print(f"Error fetching books: {e}")
         return None
