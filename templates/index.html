@@ -1,24 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>W.O.R.M. Library System</title>
-  <link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css')}}">
+  <title>Document</title>
 </head>
-
 <body>
-  <nav>
-    <div class="nav-brand">W.O.R.M. Library</div>
-    <div class="nav-links" id="navLinks"></div>
-  </nav>
+  <header>
+    <div class="logo">
+      <img src="" alt="">
+    </div>
+    <div class="nav">
+      <a href="{{url_for('landing_page')}}">Register</a>
+      <a href="{{url_for('landing_page')}}">Services</a>
+      <a href="{{url_for('landing_page')}}">About Us</a>
+      <a href="{{url_for('landing_page')}}">Contacts</a>
+    </div>
+  </header>
 
-  <div class="container" id="app">
-    <div id="view"></div>
+<main class = "body">
+    <h1>Welcome To S.H.E.L.F.</h1>
+    <p>A Website That Makes Library Keep Up With Modern Technology</p>
+
+
+  <div class="login-form">
+      <form action="/login" method="post" class="login">
+        <label for="email">Email:</label>
+          <input type="email" name="email" id="email" placeholder="Ex: Youremail@gmail.com">
+        <label for="password">Password:</label>
+          <input type="password" name="password" id="password" placeholder="Ex: MyPassword123">
+          <button type="submit" class="login_btn">Log In</button>
+      </form>
+      <a href="{{url_for('landing_page')}}">Register Here!</a>
   </div>
+</main>
 
-  <script src="{{url_for('static', filename = 'js/script.js')}}"></script>
+<footer class="footer">
+  <div class="footer">
+    <div class="contacts">
+      <a href="{{url_for('landing_page')}}"></a>
+      <a href="{{url_for('landing_page')}}"></a>
+      <a href="{{url_for('landing_page')}}"></a>
+    </div>
+    <div class="copyright">
+      <p></p>
+    </div>
+  </div>
+</footer>
 </body>
-
 </html>

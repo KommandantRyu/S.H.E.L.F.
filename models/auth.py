@@ -18,7 +18,6 @@ def validate_user(username, password):
                 'user_id': user[0],
                 'username': user[1],
                 'email': user[2],
-                'role': user[3]
             }
         return None
     except Exception as e:
