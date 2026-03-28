@@ -1,8 +1,15 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify, session, redirect, url_for, render_template
 from models.auth import validate_user
-from models.admin.user_models import create_user  
+from models.user.user_model import register_user 
+from routes.user_routes import user_bp
 
 main_bp = Blueprint('main', __name__)
+
+main_bp.register_blueprint(user_bp)
+
+@main_bp.route('/registration_page')
+def registration_page():
+    return render_template('registration.html')
 
 @main_bp.route('/register', methods=['POST'])
 def register():
@@ -10,13 +17,12 @@ def register():
     name = data.get('name')
     email = data.get('email')
     password = data.get('password')
-    role = 'user' 
     if not all([name, email, password]):
         return jsonify({'error': 'Missing required fields'}), 400
-    success, message = create_user(name, email, password, role)
+    success, message = register_user(name, email, password,)
     if not success:
         return jsonify({'error': message}), 400
-    return jsonify({'message': message}), 201
+    return jsonify({'successful': message}),200
 
 @main_bp.route('/login', methods=['POST'])
 def login():

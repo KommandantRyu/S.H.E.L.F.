@@ -94,7 +94,20 @@ def get_user_purchased_books(user_id):
             ORDER BY pb.purchase_date DESC
         """
         cursor.execute(sql, (user_id,))
-        return cursor.fetchall()
+        purchased = cursor.fetchall()
+        return purchased
     except Exception as e:
         print(f"Error fetching purchased books: {e}")
+        return None
+    
+def register_user(email, name, password,):
+    try:
+        sql = """
+            INSERT INTO users (email, name, password,)
+            VALUES (%s, %s, %s,)
+        """
+        cursor.execute(sql,(email,name,password))
+        connection.commit()
+    except Exception as e:
+        print(f"Error on Registrating user :{e}")
         return None
