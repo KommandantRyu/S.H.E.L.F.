@@ -1,26 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <header class="main-header">
-    <a href="">Home</a>
-    <a href="">Books</a>
-    <a href="">Sign In</a>
-    <a href="">Sign Up</a>
-  </header>
+{% extends "base.html" %}
+{% block title %}Join SHELF{% endblock %}
+{% block content %}
+<section class="shelf-page-head">
+  <h1 class="shelf-page-title">Create your shelf</h1>
+  <p class="shelf-page-lead">Pick a display name, email, and password. You will use your email to sign in.</p>
+</section>
 
-  <form action="register" method="post">
-    <label for="email">Email:</label>
-    <input type="text" id="email" name="email" placeholder="Ex: alexmercer1@gmail.com>
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" placeholder="Ex: Roy Jhan Hapundar">
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" placeholder="Ex: Ilovefemboy@123">
-    <button type="submit">Sign Up</button>
+<div class="shelf-card shelf-card--narrow">
+  <form action="{{ url_for('main.register') }}" method="post" class="shelf-form" autocomplete="on">
+    <div class="shelf-field">
+      <label for="name">Display name</label>
+      <input type="text" name="name" id="name" required placeholder="How we greet you">
+    </div>
+    <div class="shelf-field">
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" required placeholder="you@example.com">
+    </div>
+    <div class="shelf-field">
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" required minlength="6" placeholder="At least 6 characters">
+    </div>
+    <button type="submit" class="shelf-btn shelf-btn--primary">Create account</button>
   </form>
-</body>
-</html>
+  <p class="shelf-muted">
+    Already have an account? <a href="{{ url_for('landing_page') }}">Back to sign in</a>
+  </p>
+</div>
+{% endblock %}

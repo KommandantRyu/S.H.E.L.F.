@@ -1,8 +1,6 @@
--- MySQL dump 10.13  Distrib 8.0.44, for Win64 (x86_64)
+-- MySQL dump — table `purchased_books` (application name; migrate renames bought_books)
 --
 -- Host: 127.0.0.1    Database: library_db
--- ------------------------------------------------------
--- Server version	8.0.44
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -15,14 +13,10 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Table structure for table `bought_books`
---
-
-DROP TABLE IF EXISTS `bought_books`;
+DROP TABLE IF EXISTS `purchased_books`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `bought_books` (
+CREATE TABLE `purchased_books` (
   `purchase_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `book_id` int NOT NULL,
@@ -31,18 +25,14 @@ CREATE TABLE `bought_books` (
   PRIMARY KEY (`purchase_id`),
   KEY `user_id` (`user_id`),
   KEY `book_id` (`book_id`),
-  CONSTRAINT `bought_books_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
-  CONSTRAINT `bought_books_ibfk_2` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`) ON DELETE CASCADE
+  CONSTRAINT `purchased_books_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  CONSTRAINT `purchased_books_ibfk_2` FOREIGN KEY (`book_id`) REFERENCES `books` (`book_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `bought_books`
---
-
-LOCK TABLES `bought_books` WRITE;
-/*!40000 ALTER TABLE `bought_books` DISABLE KEYS */;
-/*!40000 ALTER TABLE `bought_books` ENABLE KEYS */;
+LOCK TABLES `purchased_books` WRITE;
+/*!40000 ALTER TABLE `purchased_books` DISABLE KEYS */;
+/*!40000 ALTER TABLE `purchased_books` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,5 +43,3 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-03-26 10:20:36

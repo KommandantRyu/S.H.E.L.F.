@@ -20,8 +20,11 @@ def dashboard():
     books = get_all_books()
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM borrowed_books WHERE return_date IS NULL")
-    active_borrows = cursor.fetchone()[0]
+    cursor.execute(
+        "SELECT COUNT(*) AS cnt FROM borrowed_books WHERE return_date IS NULL"
+    )
+    row = cursor.fetchone() or {}
+    active_borrows = row.get("cnt", 0)
     conn.close()
     return jsonify({
         'total_users': len(users) if users else 0,
@@ -99,9 +102,10 @@ def add_book():
     required = ['title', 'author', 'genre', 'year', 'pages', 'isbn']
     if not all(k in data for k in required):
         return jsonify({'error': f'Missing fields: {", ".join(required)}'}), 400
+    price = data.get('price', 0)
     success, message = create_book(
         data['title'], data['author'], data['genre'],
-        data['year'], data['pages'], data['isbn']
+        data['year'], data['pages'], data['isbn'], price
     )
     return (jsonify({'error': message}), 400) if not success else (jsonify({'message': message}), 201)
 
@@ -119,13 +123,14 @@ def edit_book(book_id):
     if not existing:
         return jsonify({'error': 'Book not found'}), 404
 
-    title = data.get('title', existing[1])
-    author = data.get('author', existing[2])
-    genre = data.get('genre', existing[3])
-    year = data.get('year', existing[4])
-    pages = data.get('pages', existing[5])
-    isbn = data.get('isbn', existing[6])
-    success = update_book(book_id, title, author, genre, year, pages, isbn)
+    title = data.get('title', existing.get('title'))
+    author = data.get('author', existing.get('author'))
+    genre = data.get('genre', existing.get('genre'))
+    year = data.get('year', existing.get('year'))
+    pages = data.get('pages', existing.get('pages'))
+    isbn = data.get('isbn', existing.get('isbn'))
+    price = data.get('price', existing.get('price'))
+    success = update_book(book_id, title, author, genre, year, pages, isbn, price)
     if not success:
         return jsonify({'error': 'Failed to update book'}), 500
     return jsonify({'message': 'Book updated successfully'}), 200

@@ -84,7 +84,7 @@ def return_book_route(book_id):
     return_date = data.get('return_date')
     if not return_date:
         return jsonify({'error': 'Missing return_date'}), 400
-    success, message = return_book(book_id, return_date)
+    success, message = return_book(book_id, return_date, user_id=session['user_id'])
     if not success:
         return jsonify({'error': message}), 400
     return jsonify({'message': message}), 200

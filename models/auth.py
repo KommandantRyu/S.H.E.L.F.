@@ -1,18 +1,15 @@
-from db import get_connection
+from db import db_cursor
 
-connection = get_connection()
-cursor = connection.cursor()
 
-def validate_user(username, password):
+def validate_user(email, password):
     try:
-        sql = """
-            SELECT * FROM users
-            WHERE email = %s AND password = %s
-        """
-        cursor.execute(sql, (username, password))
-        user = cursor.fetchone()
-        return user
-        
+        with db_cursor() as cursor:
+            sql = """
+                SELECT user_id, username, email, role, created_at FROM users
+                WHERE email = %s AND password_hash = %s
+            """
+            cursor.execute(sql, (email, password))
+            return cursor.fetchone()
     except Exception as e:
         print(f"Error validating user: {e}")
         return None

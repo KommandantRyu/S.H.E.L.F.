@@ -1,51 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <header>
-    <div class="logo">
-      <img src="" alt="">
-    </div>
-    <div class="nav">
-      <a href="{{url_for('landing_page')}}">Register</a>
-      <a href="{{url_for('landing_page')}}">Services</a>
-      <a href="{{url_for('landing_page')}}">About Us</a>
-      <a href="{{url_for('landing_page')}}">Contacts</a>
-    </div>
-  </header>
-
-<main class = "body">
-    <h1>Welcome To S.H.E.L.F.</h1>
-    <p>A Website That Makes Library Keep Up With Modern Technology</p>
-
-
-  <div class="login-form">
-      <form action="/login" method="post" class="login">
-        <label for="email">Email:</label>
-          <input type="email" name="email" id="email" placeholder="Ex: Youremail@gmail.com">
-        <label for="password">Password:</label>
-          <input type="password" name="password" id="password" placeholder="Ex: MyPassword123">
-          <button type="submit" class="login_btn ">Log In</button>
-      </form>
-      <a href="{{url_for('main.registration_page')}}">Register Here!</a>
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+<section class="shelf-hero">
+  <div class="shelf-hero__inner">
+    <p class="shelf-kicker">Digital library · Borrow · Discover</p>
+    <h1 class="shelf-hero__title">Everything you read,<br><span class="shelf-hero__accent">in one place.</span></h1>
+    <p class="shelf-hero__lead">
+      SHELF keeps your library organized—browse the catalog, borrow titles, and stay in sync with how you read today.
+    </p>
   </div>
-</main>
+</section>
 
-<footer class="footer">
-  <div class="footer">
-    <div class="contacts">
-      <a href="{{url_for('landing_page')}}"></a>
-      <a href="{{url_for('landing_page')}}"></a>
-      <a href="{{url_for('landing_page')}}"></a>
-    </div>
-    <div class="copyright">
-      <p></p>
-    </div>
-  </div>
-</footer>
-</body>
-</html>
+<div class="shelf-grid">
+  <section class="shelf-card shelf-card--login">
+    <h2 class="shelf-card__title">Sign in</h2>
+    <p class="shelf-card__sub">Use your email and password to open your shelf.</p>
+    <form action="{{ url_for('main.login') }}" method="post" class="shelf-form" autocomplete="on">
+      <div class="shelf-field">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required placeholder="you@example.com">
+      </div>
+      <div class="shelf-field">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="shelf-btn shelf-btn--primary">Sign in</button>
+    </form>
+    <p class="shelf-muted">
+      New here? <a href="{{ url_for('main.registration_page') }}">Create a SHELF account</a>
+    </p>
+  </section>
+
+  <aside class="shelf-card shelf-card--aside">
+    <h2 class="shelf-card__title">Why SHELF?</h2>
+    <ul class="shelf-list">
+      <li><strong>Browse</strong> the full catalog in one calm view.</li>
+      <li><strong>Borrow</strong> with clear due dates and history.</li>
+      <li><strong>Stay organized</strong>—built for modern library workflows.</li>
+    </ul>
+  </aside>
+</div>
+{% endblock %}

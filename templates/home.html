@@ -1,41 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <header class="main-header">
-        <a href="">Home</a>
-        <a href="">Books</a>
-        <a href="">Sign In</a>
-        <a href="">Sign Up</a>
-    </header>
+{% extends "base.html" %}
+{% block title %}Catalog{% endblock %}
+{% block content %}
+<section class="shelf-page-head">
+  <h1 class="shelf-page-title">Catalog</h1>
+  <p class="shelf-page-lead">
+    Signed in as <strong>{{ session.get('email', 'reader') }}</strong>. Scroll the shelf below.
+  </p>
+</section>
 
-   <div class = "table">
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Genre</th>
-            <th>Year Published</th>
-            <th>Pages</th>
-            <th>ISBN</th>
-            <th>Price</th>
-        </tr>
-        {% for book in books %}
-        <tr>
-            <td>{{ book.title }}</td>
-            <td>{{ book.author }}</td>
-            <td>{{ book.genre }}</td>
-            <td>{{ book.year_published }}</td>
-            <td>{{ book.pages }}</td>
-            <td>{{ book.isbn }}</td>
-            <td>{{book.price}}</td>
-        </tr>
-        {% endfor %}
-    </table>
-   </div>
-</body>
-</html>
+<div class="shelf-table-wrap">
+  {% if books %}
+  <table class="shelf-table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genre</th>
+        <th>Year</th>
+        <th>Pages</th>
+        <th>ISBN</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for book in books %}
+      <tr>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td>{{ book.genre }}</td>
+        <td>{{ book.year }}</td>
+        <td>{{ book.pages }}</td>
+        <td class="shelf-table__mono">{{ book.isbn }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="shelf-empty">No books in the catalog yet. Ask an admin to add titles.</p>
+  {% endif %}
+</div>
+{% endblock %}

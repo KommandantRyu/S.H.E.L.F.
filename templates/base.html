@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SHELF{% endblock %} · Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block head_extra %}{% endblock %}
+</head>
+<body class="shelf-body">
+  <div class="shelf-bg"></div>
+  <header class="shelf-header">
+    <a href="{{ url_for('landing_page') }}" class="shelf-brand">
+      <span class="shelf-brand__mark">SHELF</span>
+      <span class="shelf-brand__tag">your quiet corner for books</span>
+    </a>
+    <nav class="shelf-nav" aria-label="Main">
+      <a href="{{ url_for('landing_page') }}">Home</a>
+      {% if session.get('user_id') %}
+        <a href="{{ url_for('main.home') }}">Catalog</a>
+        <form action="{{ url_for('main.logout') }}" method="post" class="shelf-nav__logout">
+          <button type="submit" class="shelf-link-btn">Sign out</button>
+        </form>
+      {% else %}
+        <a href="{{ url_for('main.registration_page') }}">Join</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="shelf-flashes" role="status">
+        {% for category, message in messages %}
+          <p class="shelf-flash shelf-flash--{{ category }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="shelf-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="shelf-footer">
+    <p>SHELF · Smart Home for Every Literary Find</p>
+    <p class="shelf-footer__copy">&copy; 2026 SHELF. Built for readers.</p>
+  </footer>
+</body>
+</html>

@@ -1,6 +1,10 @@
 // Helper to make authenticated fetch
 async function apiFetch(url, options = {}) {
     options.credentials = 'include';
+    options.headers = {
+        Accept: 'application/json',
+        ...(options.headers || {}),
+    };
     const response = await fetch(url, options);
     if (!response.ok) {
         const error = await response.json().catch(() => ({}));
@@ -83,7 +87,7 @@ async function showView(viewName, params = {}) {
             viewContainer.innerHTML = await renderAdminDashboard();
             break;
         default:
-            viewContainer.innerHTML = '<h1>Welcome to W.O.R.M. Library</h1><p>Please login or register.</p>';
+            viewContainer.innerHTML = '<h1>Welcome to SHELF</h1><p>Please login or register.</p>';
     }
 }
 
@@ -94,8 +98,8 @@ function renderLoginForm() {
             <h2>Login</h2>
             <form id="loginForm">
                 <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" name="username" required>
+                    <label>Email</label>
+                    <input type="email" name="email" required>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
@@ -225,14 +229,14 @@ async function renderBookList() {
                 <tbody>
                     ${books.map(book => `
                         <tr>
-                            <td>${book[0]}</td>
-                            <td>${book[1]}</td>
-                            <td>${book[2]}</td>
-                            <td>${book[3]}</td>
-                            <td>${book[4]}</td>
-                            <td>${book[5]}</td>
-                            <td>${book[6]}</td>
-                            <td><button onclick="showView('bookDetail', {bookId: ${book[0]}})">Details</button></td>
+                            <td>${book.book_id}</td>
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td>${book.genre}</td>
+                            <td>${book.year}</td>
+                            <td>${book.pages}</td>
+                            <td>${book.isbn}</td>
+                            <td><button onclick="showView('bookDetail', {bookId: ${book.book_id}})">Details</button></td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -246,12 +250,12 @@ async function renderBookDetail(bookId) {
     // Assuming book tuple: (id, title, author, genre, year, pages, isbn)
     return `
         <div class="card">
-            <h2>${book[1]}</h2>
-            <p><strong>Author:</strong> ${book[2]}</p>
-            <p><strong>Genre:</strong> ${book[3]}</p>
-            <p><strong>Year:</strong> ${book[4]}</p>
-            <p><strong>Pages:</strong> ${book[5]}</p>
-            <p><strong>ISBN:</strong> ${book[6]}</p>
+            <h2>${book.title}</h2>
+            <p><strong>Author:</strong> ${book.author}</p>
+            <p><strong>Genre:</strong> ${book.genre}</p>
+            <p><strong>Year:</strong> ${book.year}</p>
+            <p><strong>Pages:</strong> ${book.pages}</p>
+            <p><strong>ISBN:</strong> ${book.isbn}</p>
             <div class="flex">
                 <button onclick="showBorrowForm(${bookId})">Borrow</button>
                 <button onclick="showPurchaseForm(${bookId})">Purchase</button>
@@ -287,11 +291,11 @@ async function renderBorrowedBooks() {
                 <tbody>
                     ${borrowed.map(book => `
                         <tr>
-                            <td>${book[1]}</td>
-                            <td>${book[2]}</td>
-                            <td>${book[7]}</td>
-                            <td>${book[8]}</td>
-                            <td><button onclick="returnBook(${book[0]})">Return</button></td>
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td>${book.borrow_date}</td>
+                            <td>${book.due_date}</td>
+                            <td><button onclick="returnBook(${book.book_id})">Return</button></td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -311,11 +315,11 @@ async function renderBorrowHistory() {
                 <tbody>
                     ${history.map(book => `
                         <tr>
-                            <td>${book[1]}</td>
-                            <td>${book[2]}</td>
-                            <td>${book[7]}</td>
-                            <td>${book[8]}</td>
-                            <td>${book[9] || 'Not returned'}</td>
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td>${book.borrow_date}</td>
+                            <td>${book.due_date}</td>
+                            <td>${book.return_date || 'Not returned'}</td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -335,10 +339,10 @@ async function renderPurchaseHistory() {
                 <tbody>
                     ${purchases.map(book => `
                         <tr>
-                            <td>${book[1]}</td>
-                            <td>${book[2]}</td>
-                            <td>${book[7]}</td>
-                            <td>$${book[8]}</td>
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td>${book.purchase_date}</td>
+                            <td>$${book.price_paid}</td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -376,14 +380,14 @@ async function renderAdminDashboard() {
                 <tbody>
                     ${users.map(user => `
                         <tr>
-                            <td>${user[0]}</td>
-                            <td>${user[1]}</td>
-                            <td>${user[2]}</td>
-                            <td>${user[3]}</td>
+                            <td>${user.user_id}</td>
+                            <td>${user.username}</td>
+                            <td>${user.email}</td>
+                            <td>${user.role}</td>
                             <td>
-                                <button onclick="editUser(${user[0]})">Edit</button>
-                                <button onclick="deleteUser(${user[0]})">Delete</button>
-                                <button onclick="changeRole(${user[0]})">Change Role</button>
+                                <button onclick="editUser(${user.user_id})">Edit</button>
+                                <button onclick="deleteUser(${user.user_id})">Delete</button>
+                                <button onclick="changeRole(${user.user_id})">Change Role</button>
                             </td>
                         </tr>
                     `).join('')}
@@ -407,16 +411,16 @@ async function renderAdminDashboard() {
                 <tbody>
                     ${books.map(book => `
                         <tr>
-                            <td>${book[0]}</td>
-                            <td>${book[1]}</td>
-                            <td>${book[2]}</td>
-                            <td>${book[3]}</td>
-                            <td>${book[4]}</td>
-                            <td>${book[5]}</td>
-                            <td>${book[6]}</td>
+                            <td>${book.book_id}</td>
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td>${book.genre}</td>
+                            <td>${book.year}</td>
+                            <td>${book.pages}</td>
+                            <td>${book.isbn}</td>
                             <td>
-                                <button onclick="editBook(${book[0]})">Edit</button>
-                                <button onclick="deleteBook(${book[0]})">Delete</button>
+                                <button onclick="editBook(${book.book_id})">Edit</button>
+                                <button onclick="deleteBook(${book.book_id})">Delete</button>
                             </td>
                         </tr>
                     `).join('')}
@@ -507,13 +511,13 @@ document.addEventListener('submit', async (e) => {
     if (e.target.id === 'loginForm') {
         e.preventDefault();
         const form = e.target;
-        const username = form.username.value;
+        const email = form.email.value;
         const password = form.password.value;
         try {
             await apiFetch('/login', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username, password})
+                body: JSON.stringify({email, password})
             });
             showView('dashboard');
         } catch (err) {
@@ -648,12 +652,12 @@ window.createBook = async () => {
 window.editBook = async (id) => {
     // Fetch current data first
     const book = await apiFetch(`/admin/books/${id}`);
-    const newTitle = prompt('Title:', book[1]);
-    const newAuthor = prompt('Author:', book[2]);
-    const newGenre = prompt('Genre:', book[3]);
-    const newYear = prompt('Year:', book[4]);
-    const newPages = prompt('Pages:', book[5]);
-    const newIsbn = prompt('ISBN:', book[6]);
+    const newTitle = prompt('Title:', book.title);
+    const newAuthor = prompt('Author:', book.author);
+    const newGenre = prompt('Genre:', book.genre);
+    const newYear = prompt('Year:', book.year);
+    const newPages = prompt('Pages:', book.pages);
+    const newIsbn = prompt('ISBN:', book.isbn);
     const data = {};
     if (newTitle) data.title = newTitle;
     if (newAuthor) data.author = newAuthor;

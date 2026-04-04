@@ -30,7 +30,7 @@ CREATE TABLE `books` (
   `year` int DEFAULT NULL,
   `pages` int DEFAULT NULL,
   `isbn` varchar(20) DEFAULT NULL,
-  `price` decimal(10,2) NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT 0.00,
   PRIMARY KEY (`book_id`),
   UNIQUE KEY `isbn` (`isbn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -53,5 +53,3 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-03-26 10:20:37
