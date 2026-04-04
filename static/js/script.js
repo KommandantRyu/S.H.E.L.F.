@@ -23,25 +23,23 @@ async function checkSession() {
     }
 }
 
-// Render navigation based on auth & role
+// Render navigation based on auth (admin tools available to any signed-in user)
 function renderNav(user) {
     const navDiv = document.getElementById('navLinks');
+    if (!navDiv) return;
     if (!user) {
         navDiv.innerHTML = `
-            <a href="#" onclick="showView('login'); return false;">Login</a>
+            <a href="#" onclick="showView('login'); return false;">Sign in</a>
             <a href="#" onclick="showView('register'); return false;">Register</a>
         `;
     } else {
-        let links = `
+        navDiv.innerHTML = `
             <a href="#" onclick="showView('dashboard'); return false;">Dashboard</a>
             <a href="#" onclick="showView('books'); return false;">Books</a>
             <a href="#" onclick="showView('profile'); return false;">Profile</a>
-            <a href="#" onclick="logout(); return false;">Logout</a>
+            <a href="#" onclick="showView('admin'); return false;">Manage library</a>
+            <a href="#" onclick="logout(); return false;">Sign out</a>
         `;
-        if (user.role === 'admin') {
-            links += `<a href="#" onclick="showView('admin'); return false;" class="admin-badge">Admin</a>`;
-        }
-        navDiv.innerHTML = links;
     }
 }
 
@@ -83,11 +81,11 @@ async function showView(viewName, params = {}) {
             viewContainer.innerHTML = await renderPurchaseHistory();
             break;
         case 'admin':
-            if (!user || user.role !== 'admin') { showView('dashboard'); return; }
+            if (!user) { showView('login'); return; }
             viewContainer.innerHTML = await renderAdminDashboard();
             break;
         default:
-            viewContainer.innerHTML = '<h1>Welcome to SHELF</h1><p>Please login or register.</p>';
+            viewContainer.innerHTML = '<h1>Welcome to S.H.E.L.F.</h1><p>System Hub For Efficient Library Functions — please sign in or register.</p>';
     }
 }
 
@@ -151,7 +149,6 @@ async function renderUserDashboard(user) {
     return `
         <div class="card">
             <h2>Welcome, ${user.username}</h2>
-            <p>Role: ${user.role}</p>
             <div class="flex">
                 <div class="card" style="flex:1">
                     <h3>Currently Borrowed</h3>
@@ -352,13 +349,19 @@ async function renderPurchaseHistory() {
 }
 
 async function renderAdminDashboard() {
-    // Fetch dashboard data
-    const stats = await apiFetch('/admin/dashboard');
-    const users = await apiFetch('/admin/users');
-    const books = await apiFetch('/admin/books');
+    let stats = { total_users: 0, total_books: 0, active_borrows: 0 };
+    let users = [];
+    let books = [];
+    try {
+        stats = await apiFetch('/admin/dashboard');
+        users = await apiFetch('/admin/users');
+        books = await apiFetch('/admin/books');
+    } catch (e) {
+        return `<div class="card"><h2>Manage library</h2><p>Could not load admin data. Sign in on the main site first, then open this view again. (${e.message})</p></div>`;
+    }
     return `
         <div class="card">
-            <h2>Admin Dashboard</h2>
+            <h2>Manage library</h2>
             <div class="flex">
                 <div class="card">Total Users: ${stats.total_users}</div>
                 <div class="card">Total Books: ${stats.total_books}</div>
@@ -371,23 +374,21 @@ async function renderAdminDashboard() {
                     <div class="form-group"><label>Username</label><input type="text" id="newUsername" required></div>
                     <div class="form-group"><label>Email</label><input type="email" id="newEmail" required></div>
                     <div class="form-group"><label>Password</label><input type="password" id="newPassword" required></div>
-                    <div class="form-group"><label>Role</label><select id="newRole"><option>user</option><option>admin</option></select></div>
                     <button type="submit">Create</button>
                 </form>
             </div>
             <table>
-                <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead>
+                <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Joined</th><th>Actions</th></tr></thead>
                 <tbody>
                     ${users.map(user => `
                         <tr>
                             <td>${user.user_id}</td>
                             <td>${user.username}</td>
                             <td>${user.email}</td>
-                            <td>${user.role}</td>
+                            <td>${user.created_at || '—'}</td>
                             <td>
                                 <button onclick="editUser(${user.user_id})">Edit</button>
                                 <button onclick="deleteUser(${user.user_id})">Delete</button>
-                                <button onclick="changeRole(${user.user_id})">Change Role</button>
                             </td>
                         </tr>
                     `).join('')}
@@ -568,12 +569,11 @@ window.createUser = async () => {
     const username = document.getElementById('newUsername').value;
     const email = document.getElementById('newEmail').value;
     const password = document.getElementById('newPassword').value;
-    const role = document.getElementById('newRole').value;
     try {
         await apiFetch('/admin/users', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({username, email, password, role})
+            body: JSON.stringify({username, email, password})
         });
         alert('User created');
         showView('admin');
@@ -582,16 +582,13 @@ window.createUser = async () => {
     }
 };
 window.editUser = (id) => {
-    // Simple edit: prompt for new fields
     const newUsername = prompt('New username:');
     const newEmail = prompt('New email:');
     const newPassword = prompt('New password (leave blank to keep):');
-    const newRole = prompt('New role (user/admin):');
     const data = {};
     if (newUsername) data.username = newUsername;
     if (newEmail) data.email = newEmail;
     if (newPassword) data.password = newPassword;
-    if (newRole && (newRole === 'user' || newRole === 'admin')) data.role = newRole;
     if (Object.keys(data).length === 0) return;
     apiFetch(`/admin/users/${id}`, {
         method: 'PUT',
@@ -607,21 +604,6 @@ window.deleteUser = async (id) => {
     try {
         await apiFetch(`/admin/users/${id}`, {method: 'DELETE'});
         alert('User deleted');
-        showView('admin');
-    } catch (err) {
-        alert('Error: ' + err.message);
-    }
-};
-window.changeRole = async (id) => {
-    const newRole = prompt('New role (user/admin):');
-    if (!newRole || !['user','admin'].includes(newRole)) return;
-    try {
-        await apiFetch(`/admin/users/${id}/role`, {
-            method: 'PATCH',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({role: newRole})
-        });
-        alert('Role changed');
         showView('admin');
     } catch (err) {
         alert('Error: ' + err.message);

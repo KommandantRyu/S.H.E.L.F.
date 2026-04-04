@@ -3,18 +3,18 @@
 {% block content %}
 <section class="shelf-hero">
   <div class="shelf-hero__inner">
-    <p class="shelf-kicker">Digital library · Borrow · Discover</p>
+    <p class="shelf-kicker">System Hub For Efficient Library Functions</p>
     <h1 class="shelf-hero__title">Everything you read,<br><span class="shelf-hero__accent">in one place.</span></h1>
     <p class="shelf-hero__lead">
-      SHELF keeps your library organized—browse the catalog, borrow titles, and stay in sync with how you read today.
+      <abbr title="System Hub For Efficient Library Functions">S.H.E.L.F.</abbr> keeps your library organized—browse the catalog, borrow titles, and stay in sync with how you read today.
     </p>
   </div>
 </section>
 
-<div class="shelf-grid">
+<div class="shelf-grid" id="sign-in">
   <section class="shelf-card shelf-card--login">
     <h2 class="shelf-card__title">Sign in</h2>
-    <p class="shelf-card__sub">Use your email and password to open your shelf.</p>
+    <p class="shelf-card__sub">Use your email and password to open your library hub.</p>
     <form action="{{ url_for('main.login') }}" method="post" class="shelf-form" autocomplete="on">
       <div class="shelf-field">
         <label for="email">Email</label>
@@ -27,12 +27,12 @@
       <button type="submit" class="shelf-btn shelf-btn--primary">Sign in</button>
     </form>
     <p class="shelf-muted">
-      New here? <a href="{{ url_for('main.registration_page') }}">Create a SHELF account</a>
+      New here? <a href="{{ url_for('main.registration_page') }}">Create a S.H.E.L.F. account</a>
     </p>
   </section>
 
   <aside class="shelf-card shelf-card--aside">
-    <h2 class="shelf-card__title">Why SHELF?</h2>
+    <h2 class="shelf-card__title">Why S.H.E.L.F.?</h2>
     <ul class="shelf-list">
       <li><strong>Browse</strong> the full catalog in one calm view.</li>
       <li><strong>Borrow</strong> with clear due dates and history.</li>

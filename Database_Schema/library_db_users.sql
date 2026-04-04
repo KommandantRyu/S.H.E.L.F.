@@ -26,8 +26,7 @@ CREATE TABLE `users` (
   `user_id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
-  `password_hash` varchar(255) NOT NULL,
-  `role` varchar(20) NOT NULL DEFAULT 'user',
+  `password` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`)
@@ -40,7 +39,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`user_id`, `email`, `username`, `password_hash`, `role`, `created_at`) VALUES (1,'gab@gmail.com','gab','gab123','user',CURRENT_TIMESTAMP);
+INSERT INTO `users` (`user_id`, `email`, `username`, `password`, `created_at`) VALUES (1,'gab@gmail.com','gab','gab123',CURRENT_TIMESTAMP);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

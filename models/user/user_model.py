@@ -4,7 +4,7 @@ from db import db_cursor
 def get_user_profile(user_id):
     try:
         with db_cursor() as cursor:
-            sql = "SELECT user_id, username, email, role, created_at FROM users WHERE user_id = %s"
+            sql = "SELECT user_id, username, email, created_at FROM users WHERE user_id = %s"
             cursor.execute(sql, (user_id,))
             user = cursor.fetchone()
             if user:
@@ -12,7 +12,6 @@ def get_user_profile(user_id):
                     'user_id': user['user_id'],
                     'username': user['username'],
                     'email': user['email'],
-                    'role': user['role'],
                     'created_at': user['created_at']
                 }
             return None
@@ -32,7 +31,7 @@ def update_user_profile(user_id, username=None, email=None, password=None):
             updates.append("email = %s")
             params.append(email)
         if password:
-            updates.append("password_hash = %s")
+            updates.append("password = %s")
             params.append(password)
         
         if not updates:
@@ -112,8 +111,8 @@ def register_user(name, email, password):
                 return False, "Email or username already registered"
 
             sql = """
-                INSERT INTO users (username, email, password_hash, role)
-                VALUES (%s, %s, %s, 'user')
+                INSERT INTO users (username, email, password)
+                VALUES (%s, %s, %s)
             """
             cursor.execute(sql, (name, email, password))
             return True, "Registration successful"

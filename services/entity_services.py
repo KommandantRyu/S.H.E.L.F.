@@ -26,8 +26,8 @@ class user_services():
             try:
                 with db_cursor() as cursor:
                     sql = """
-                        INSERT INTO users (username, email, password_hash, role)
-                        VALUES (%s, %s, %s, 'user')
+                        INSERT INTO users (username, email, password)
+                        VALUES (%s, %s, %s)
                     """
                     cursor.execute(sql, (self.name, self.email, self.password))
             except Exception as e:

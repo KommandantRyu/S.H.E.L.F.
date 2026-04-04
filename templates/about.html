@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock %}
+{% block content %}
+<section class="shelf-page-head">
+  <h1 class="shelf-page-title">About S.H.E.L.F.</h1>
+  <p class="shelf-page-lead">
+    <abbr title="System Hub For Efficient Library Functions">S.H.E.L.F.</abbr> stands for
+    <strong>System Hub For Efficient Library Functions</strong>—a small web app for browsing a catalog,
+    borrowing books, and keeping your reading activity in one place.
+  </p>
+</section>
+
+<div class="shelf-grid">
+  <section class="shelf-card">
+    <h2 class="shelf-card__title">What you can do</h2>
+    <p class="shelf-card__sub">Designed for learners and librarians practicing full-stack workflows.</p>
+    <ul class="shelf-list">
+      <li>Create an account and sign in with your email.</li>
+      <li>Browse the catalog after you are signed in.</li>
+      <li>Use the JSON APIs under <code class="shelf-table__mono">/user</code> and <code class="shelf-table__mono">/admin</code> for borrows, returns, and management (when signed in).</li>
+    </ul>
+  </section>
+  <aside class="shelf-card shelf-card--aside">
+    <h2 class="shelf-card__title">Tech stack</h2>
+    <p class="shelf-card__sub">Flask, MySQL, and server-rendered pages with a calm “shelf” visual style.</p>
+    <ul class="shelf-list">
+      <li>Session-based authentication for HTML flows.</li>
+      <li>PyMySQL with per-request connections.</li>
+      <li>Schema scripts live in <code class="shelf-table__mono">Database_Schema/</code>.</li>
+    </ul>
+  </aside>
+</div>
+{% endblock %}

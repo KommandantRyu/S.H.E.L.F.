@@ -6,9 +6,27 @@ from models.admin.book_models import get_all_books
 main_bp = Blueprint('main', __name__)
 
 
+def _session_user_payload(user_row):
+    if not user_row:
+        return None
+    return {
+        'user_id': user_row['user_id'],
+        'username': user_row.get('username'),
+        'email': user_row.get('email'),
+        'created_at': user_row['created_at'].isoformat()
+        if user_row.get('created_at')
+        else None,
+    }
+
+
 @main_bp.route('/registration_page')
 def registration_page():
     return render_template('registration.html')
+
+
+@main_bp.route('/about')
+def about_page():
+    return render_template('about.html')
 
 
 @main_bp.route('/home')
@@ -16,7 +34,15 @@ def home():
     if 'user_id' not in session:
         flash('Please sign in to browse the catalog.', 'error')
         return redirect(url_for('landing_page'))
-    books = get_all_books() or []
+    books = get_all_books()
+    if books is None:
+        flash(
+            'The catalog could not be loaded. Check that MySQL is running, '
+            'your credentials in environment variables are correct, and the '
+            '`books` table exists.',
+            'error',
+        )
+        books = []
     return render_template('home.html', books=books)
 
 
@@ -44,7 +70,7 @@ def register():
         return redirect(url_for('main.registration_page'))
 
     if request.is_json:
-        return jsonify({'successful': message}), 200
+        return jsonify({'success': True, 'message': message}), 200
     flash('Account created. You can sign in now.', 'success')
     return redirect(url_for('landing_page'))
 
@@ -77,7 +103,7 @@ def login():
     session['username'] = user.get('username', '')
 
     if request.is_json:
-        return jsonify({'message': 'Login successful', 'user': user}), 200
+        return jsonify({'message': 'Login successful', 'user': _session_user_payload(user)}), 200
     return redirect(url_for('main.home'))
 
 

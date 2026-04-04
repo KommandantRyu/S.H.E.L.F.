@@ -1,5 +1,5 @@
 # admin_routes.py
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from models.admin.book_models import (
     get_all_books, update_book, delete_book, sort_books,
     borrow_book, return_book, purchase_book,
@@ -7,11 +7,17 @@ from models.admin.book_models import (
 )
 from models.admin.user_models import (
     get_all_users, get_user_by_id, create_user, update_user, delete_user,
-    update_user_role, sort_users
+    sort_users
 )
 from db import get_connection
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+
+
+@admin_bp.before_request
+def _admin_requires_login():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Authentication required'}), 401
 
 
 @admin_bp.route('/dashboard', methods=['GET'])
@@ -44,14 +50,13 @@ def list_users():
 
 @admin_bp.route('/users', methods=['POST'])
 def add_user():
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
-    role = data.get('role', 'user')
     if not all([username, email, password]):
         return jsonify({'error': 'Missing required fields'}), 400
-    success, message = create_user(username, email, password, role)
+    success, message = create_user(username, email, password)
     return (jsonify({'error': message}), 400) if not success else (jsonify({'message': message}), 201)
 
 @admin_bp.route('/users/<int:user_id>', methods=['GET'])
@@ -63,27 +68,18 @@ def get_user(user_id):
 
 @admin_bp.route('/users/<int:user_id>', methods=['PUT'])
 def edit_user(user_id):
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     success, message = update_user(
         user_id,
         username=data.get('username'),
         email=data.get('email'),
         password=data.get('password'),
-        role=data.get('role')
     )
     return (jsonify({'error': message}), 400) if not success else (jsonify({'message': message}), 200)
 
 @admin_bp.route('/users/<int:user_id>', methods=['DELETE'])
 def remove_user(user_id):
     success, message = delete_user(user_id)
-    return (jsonify({'error': message}), 400) if not success else (jsonify({'message': message}), 200)
-
-@admin_bp.route('/users/<int:user_id>/role', methods=['PATCH'])
-def change_user_role(user_id):
-    new_role = request.get_json().get('role')
-    if not new_role:
-        return jsonify({'error': 'Missing role'}), 400
-    success, message = update_user_role(user_id, new_role)
     return (jsonify({'error': message}), 400) if not success else (jsonify({'message': message}), 200)
 
 # Books
@@ -98,7 +94,7 @@ def list_books():
 
 @admin_bp.route('/books', methods=['POST'])
 def add_book():
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     required = ['title', 'author', 'genre', 'year', 'pages', 'isbn']
     if not all(k in data for k in required):
         return jsonify({'error': f'Missing fields: {", ".join(required)}'}), 400
@@ -118,7 +114,7 @@ def get_book(book_id):
 
 @admin_bp.route('/books/<int:book_id>', methods=['PUT'])
 def edit_book(book_id):
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     existing = get_book_by_id(book_id)
     if not existing:
         return jsonify({'error': 'Book not found'}), 404
@@ -145,7 +141,7 @@ def remove_book(book_id):
 
 @admin_bp.route('/books/<int:book_id>/borrow', methods=['POST'])
 def admin_borrow_book(book_id):
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     user_id = data.get('user_id')
     borrow_date = data.get('borrow_date')
     due_date = data.get('due_date')
@@ -156,7 +152,8 @@ def admin_borrow_book(book_id):
 
 @admin_bp.route('/books/<int:book_id>/return', methods=['POST'])
 def admin_return_book(book_id):
-    return_date = request.get_json().get('return_date')
+    data = request.get_json(silent=True) or {}
+    return_date = data.get('return_date')
     if not return_date:
         return jsonify({'error': 'Missing return_date'}), 400
     success, message = return_book(book_id, return_date)
@@ -164,7 +161,7 @@ def admin_return_book(book_id):
 
 @admin_bp.route('/books/<int:book_id>/purchase', methods=['POST'])
 def admin_purchase_book(book_id):
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     user_id = data.get('user_id')
     purchase_date = data.get('purchase_date')
     price_paid = data.get('price_paid')

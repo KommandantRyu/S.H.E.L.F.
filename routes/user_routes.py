@@ -30,7 +30,7 @@ def update_profile():
     err = login_required()
     if err: return err
     user_id = session['user_id']
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
@@ -66,7 +66,7 @@ def borrow(book_id):
     err = login_required()
     if err: return err
     user_id = session['user_id']
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     borrow_date = data.get('borrow_date')
     due_date = data.get('due_date')
     if not borrow_date or not due_date:
@@ -80,7 +80,7 @@ def borrow(book_id):
 def return_book_route(book_id):
     err = login_required()
     if err: return err
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     return_date = data.get('return_date')
     if not return_date:
         return jsonify({'error': 'Missing return_date'}), 400
@@ -95,7 +95,7 @@ def purchase(book_id):
     err = login_required()
     if err: return err
     user_id = session['user_id']
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     purchase_date = data.get('purchase_date')
     price_paid = data.get('price_paid')
     if not purchase_date or not price_paid:

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Catalog{% endblock %}
+{% block title %}Catalog · S.H.E.L.F.{% endblock %}
 {% block content %}
 <section class="shelf-page-head">
   <h1 class="shelf-page-title">Catalog</h1>
@@ -19,6 +19,7 @@
         <th>Year</th>
         <th>Pages</th>
         <th>ISBN</th>
+        <th>Price</th>
       </tr>
     </thead>
     <tbody>
@@ -30,12 +31,13 @@
         <td>{{ book.year }}</td>
         <td>{{ book.pages }}</td>
         <td class="shelf-table__mono">{{ book.isbn }}</td>
+        <td>{% if book.price is not none %}${{ book.price }}{% else %}—{% endif %}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
   {% else %}
-  <p class="shelf-empty">No books in the catalog yet. Ask an admin to add titles.</p>
+  <p class="shelf-empty">No books in the catalog yet. Add titles with the admin API or import your schema.</p>
   {% endif %}
 </div>
 {% endblock %}

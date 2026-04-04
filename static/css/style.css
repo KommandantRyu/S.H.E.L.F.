@@ -143,15 +143,7 @@ th {
     display: none;
 }
 
-.admin-badge {
-    background: #333;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-}
-
-/* ——— SHELF app shell ——— */
+/* ——— S.H.E.L.F. app shell ——— */
 :root {
     --shelf-ink: #1c1917;
     --shelf-muted: #57534e;
@@ -166,6 +158,7 @@ th {
     --shelf-radius: 14px;
     --font-display: "Fraunces", Georgia, serif;
     --font-body: "Source Sans 3", system-ui, sans-serif;
+    --shelf-page-gradient: linear-gradient(165deg, #f5efe6 0%, #ebe4d8 45%, #e0d5c8 100%);
 }
 
 .shelf-body {
@@ -180,8 +173,7 @@ th {
     position: fixed;
     inset: 0;
     z-index: -1;
-    background:
-        linear-gradient(165deg, #f5efe6 0%, #ebe4d8 45%, #e0d5c8 100%);
+    background: var(--shelf-page-gradient);
     pointer-events: none;
 }
 
@@ -198,80 +190,167 @@ th {
     );
 }
 
-.shelf-header {
-    max-width: 1100px;
+/* ——— Site top bar (dark wood) + actions/buttons match bar tone ——— */
+.site-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.site-topbar__plank {
+    background: linear-gradient(180deg, #5c4636 0%, #4a3a2e 48%, #3d2f24 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 4px 0 #2d231c,
+        0 12px 28px rgba(28, 25, 23, 0.18);
+}
+
+.site-topbar__inner {
+    max-width: 1120px;
     margin: 0 auto;
-    padding: 1.25rem 1.5rem;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-    border-bottom: 1px solid var(--shelf-line);
-}
-
-.shelf-brand {
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-}
-
-.shelf-brand__mark {
-    font-family: var(--font-display);
-    font-size: clamp(1.75rem, 4vw, 2.25rem);
-    font-weight: 600;
-    letter-spacing: 0.22em;
-    color: var(--shelf-wood);
-}
-
-.shelf-brand__tag {
-    font-size: 0.85rem;
-    color: var(--shelf-muted);
-    letter-spacing: 0.02em;
-}
-
-.shelf-nav {
+    padding: 0.75rem 1.25rem;
     display: flex;
     align-items: center;
-    gap: 1.25rem;
+    justify-content: space-between;
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
-.shelf-nav a {
-    color: var(--shelf-wood-light);
+.site-topbar__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
     text-decoration: none;
+    color: #faf7f2;
+    flex-shrink: 0;
+    max-width: min(100%, 280px);
+}
+
+.site-topbar__logo {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    line-height: 1.2;
+}
+
+.site-topbar__acronym {
+    font-size: 0.62rem;
     font-weight: 500;
+    letter-spacing: 0.03em;
+    line-height: 1.35;
+    color: rgba(250, 247, 242, 0.72);
+    text-transform: none;
+    max-width: 100%;
+}
+
+.site-topbar__nav {
+     background: linear-gradient(180deg, #5c4636 0%, #4a3a2e 48%, #3d2f24 100%);
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    min-width: 0;
+}
+
+.site-topbar__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    flex-wrap: wrap;
+}
+
+.site-topbar__link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
     font-size: 0.95rem;
-    border-bottom: 2px solid transparent;
-    padding-bottom: 2px;
-    transition: border-color 0.2s, color 0.2s;
+    color: rgba(250, 247, 242, 0.9);
+    transition: background 0.2s, color 0.2s;
 }
 
-.shelf-nav a:hover {
-    color: var(--shelf-accent);
-    border-bottom-color: var(--shelf-accent-soft);
+.site-topbar__link:hover {
+    background: rgba(0, 0, 0, 0.18);
+    color: #fff;
 }
 
-.shelf-nav__logout {
-    display: inline;
+.site-topbar__link.is-active {
+    background: rgba(0, 0, 0, 0.22);
+    color: #fffefb;
+    box-shadow: inset 0 -2px 0 var(--shelf-accent);
+}
+
+.site-topbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+    padding: 0.2rem 0.35rem;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.site-topbar__user {
+    font-size: 0.82rem;
+    color: rgba(250, 247, 242, 0.78);
+    max-width: 9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.site-topbar__signout {
     margin: 0;
 }
 
-.shelf-link-btn {
-    background: none;
-    border: none;
-    font: inherit;
+.site-topbar__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.42rem 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(250, 247, 242, 0.22);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.82rem;
     cursor: pointer;
-    color: var(--shelf-wood-light);
-    font-weight: 500;
-    padding: 0;
-    border-bottom: 2px solid transparent;
+    background: rgba(0, 0, 0, 0.15);
+    color: rgba(250, 247, 242, 0.95);
+    box-shadow: none;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
 
-.shelf-link-btn:hover {
-    color: var(--shelf-accent);
+.site-topbar__btn:hover {
+    background: rgba(0, 0, 0, 0.28);
+    border-color: rgba(250, 247, 242, 0.35);
+    color: #fff;
+}
+
+.site-topbar__btn--ghost {
+    text-decoration: none;
+    background: rgba(0, 0, 0, 0.12);
+    color: rgba(250, 247, 242, 0.92);
+}
+
+.site-topbar__btn--ghost:hover {
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.site-topbar__ledge {
+    height: 10px;
+    margin: 0 auto;
+    max-width: 1120px;
+    border-radius: 0 0 10px 10px;
+    background: linear-gradient(180deg, #c4b5a0 0%, #a89882 100%);
+    box-shadow:
+        0 6px 14px rgba(61, 47, 36, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .shelf-flashes {
@@ -309,6 +388,17 @@ th {
     max-width: 1100px;
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
+    scroll-margin-top: 6.5rem;
+}
+
+#sign-in {
+    scroll-margin-top: 7rem;
+}
+
+.shelf-footer abbr {
+    text-decoration: none;
+    font-variant: normal;
+    letter-spacing: 0.12em;
 }
 
 .shelf-hero {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}SHELF{% endblock %} · Library</title>
+  <title>{% block title %}S.H.E.L.F.{% endblock %} · Library</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
@@ -12,27 +12,58 @@
 </head>
 <body class="shelf-body">
   <div class="shelf-bg"></div>
-  <header class="shelf-header">
-    <a href="{{ url_for('landing_page') }}" class="shelf-brand">
-      <span class="shelf-brand__mark">SHELF</span>
-      <span class="shelf-brand__tag">your quiet corner for books</span>
-    </a>
-    <nav class="shelf-nav" aria-label="Main">
-      <a href="{{ url_for('landing_page') }}">Home</a>
-      {% if session.get('user_id') %}
-        <a href="{{ url_for('main.home') }}">Catalog</a>
-        <form action="{{ url_for('main.logout') }}" method="post" class="shelf-nav__logout">
-          <button type="submit" class="shelf-link-btn">Sign out</button>
-        </form>
-      {% else %}
-        <a href="{{ url_for('main.registration_page') }}">Join</a>
-      {% endif %}
-    </nav>
+
+  <header class="site-topbar">
+    <div class="site-topbar__plank">
+      <div class="site-topbar__inner">
+        <a href="{{ url_for('landing_page') }}" class="site-topbar__brand" aria-label="S.H.E.L.F. home — System Hub For Efficient Library Functions">
+          <span class="site-topbar__logo">S.H.E.L.F.</span>
+          <span class="site-topbar__acronym">System Hub For Efficient Library Functions</span>
+        </a>
+
+        <nav class="site-topbar__nav" aria-label="Primary">
+          <ul class="site-topbar__links">
+            <li>
+              <a href="{{ url_for('landing_page') }}"
+                 class="site-topbar__link{% if request.endpoint == 'landing_page' %} is-active{% endif %}">Home</a>
+            </li>
+            <li>
+              <a href="{{ url_for('main.about_page') }}"
+                 class="site-topbar__link{% if request.endpoint == 'main.about_page' %} is-active{% endif %}">About</a>
+            </li>
+            {% if session.get('user_id') %}
+            <li>
+              <a href="{{ url_for('main.home') }}"
+                 class="site-topbar__link{% if request.endpoint == 'main.home' %} is-active{% endif %}">Catalog</a>
+            </li>
+            {% endif %}
+            {% if not session.get('user_id') %}
+            <li>
+              <a href="{{ url_for('main.registration_page') }}"
+                 class="site-topbar__link{% if request.endpoint == 'main.registration_page' %} is-active{% endif %}">Join</a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+
+        <div class="site-topbar__actions">
+          {% if session.get('user_id') %}
+            <span class="site-topbar__user" title="Signed in">{{ session.get('username') or session.get('email', 'Reader') }}</span>
+            <form action="{{ url_for('main.logout') }}" method="post" class="site-topbar__signout">
+              <button type="submit" class="site-topbar__btn">Sign out</button>
+            </form>
+          {% else %}
+            <a href="{{ url_for('landing_page') }}#sign-in" class="site-topbar__btn site-topbar__btn--ghost">Sign in</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="site-topbar__ledge" aria-hidden="true"></div>
   </header>
 
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-      <div class="shelf-flashes" role="status">
+      <div class="shelf-flashes" aria-live="polite">
         {% for category, message in messages %}
           <p class="shelf-flash shelf-flash--{{ category }}">{{ message }}</p>
         {% endfor %}
@@ -40,13 +71,13 @@
     {% endif %}
   {% endwith %}
 
-  <main class="shelf-main">
+  <main class="shelf-main" id="main-content">
     {% block content %}{% endblock %}
   </main>
 
   <footer class="shelf-footer">
-    <p>SHELF · Smart Home for Every Literary Find</p>
-    <p class="shelf-footer__copy">&copy; 2026 SHELF. Built for readers.</p>
+    <p><abbr title="System Hub For Efficient Library Functions">S.H.E.L.F.</abbr> — System Hub For Efficient Library Functions</p>
+    <p class="shelf-footer__copy">&copy; 2026 S.H.E.L.F. Built for readers.</p>
   </footer>
 </body>
 </html>

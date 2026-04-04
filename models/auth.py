@@ -5,8 +5,8 @@ def validate_user(email, password):
     try:
         with db_cursor() as cursor:
             sql = """
-                SELECT user_id, username, email, role, created_at FROM users
-                WHERE email = %s AND password_hash = %s
+                SELECT user_id, username, email, created_at FROM users
+                WHERE email = %s AND password = %s
             """
             cursor.execute(sql, (email, password))
             return cursor.fetchone()

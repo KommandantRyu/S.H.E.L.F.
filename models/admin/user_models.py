@@ -1,13 +1,13 @@
 from db import db_cursor
 
-ALLOWED_USER_SORT_COLUMNS = {'user_id', 'username', 'email', 'role', 'created_at'}
+ALLOWED_USER_SORT_COLUMNS = {'user_id', 'username', 'email', 'created_at'}
 DEFAULT_USER_SORT_COLUMN = 'user_id'
 DEFAULT_USER_SORT_ORDER = 'ASC'
 
 def get_all_users():
     try:
         with db_cursor() as cursor:
-            cursor.execute("SELECT user_id, username, email, role, created_at FROM users")
+            cursor.execute("SELECT user_id, username, email, created_at FROM users")
             return cursor.fetchall()
     except Exception as e:
         print(f"Error fetching users: {e}")
@@ -17,7 +17,7 @@ def get_user_by_id(user_id):
     try:
         with db_cursor() as cursor:
             cursor.execute(
-                "SELECT user_id, username, email, role, created_at FROM users WHERE user_id = %s",
+                "SELECT user_id, username, email, created_at FROM users WHERE user_id = %s",
                 (user_id,),
             )
             return cursor.fetchone()
@@ -29,7 +29,7 @@ def get_user_by_username(username):
     try:
         with db_cursor() as cursor:
             cursor.execute(
-                "SELECT user_id, username, email, role, created_at FROM users WHERE username = %s",
+                "SELECT user_id, username, email, created_at FROM users WHERE username = %s",
                 (username,),
             )
             return cursor.fetchone()
@@ -37,43 +37,40 @@ def get_user_by_username(username):
         print(f"Error fetching user by username: {e}")
         return None
 
-def create_user(username, email, password, role='user'):
+def create_user(name, email, password):
     try:
         with db_cursor() as cursor:
             cursor.execute(
-                "SELECT user_id FROM users WHERE username = %s OR email = %s",
-                (username, email),
+                "SELECT user_id FROM users WHERE name = %s OR email = %s",
+                (name, email),
             )
             if cursor.fetchone():
-                return False, "Username or email already exists"
+                return False, "Name or email already exists"
 
             sql = """
-                INSERT INTO users (username, email, password_hash, role)
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO users (name, email, password)
+                VALUES (%s, %s, %s)
             """
-            cursor.execute(sql, (username, email, password, role))
+            cursor.execute(sql, (name, email, password))
             return True, "User created successfully"
     except Exception as e:
         print(f"Error creating user: {e}")
         return False, "Database error occurred"
 
-def update_user(user_id, username=None, email=None, password=None, role=None):
+def update_user(user_id, name=None, email=None, password=None):
     try:
         updates = []
         params = []
         
-        if username:
+        if name:
             updates.append("username = %s")
-            params.append(username)
+            params.append(name)
         if email:
             updates.append("email = %s")
             params.append(email)
         if password:
-            updates.append("password_hash = %s")
+            updates.append("password = %s")
             params.append(password)
-        if role:
-            updates.append("role = %s")
-            params.append(role)
         
         if not updates:
             return False, "No fields to update"
@@ -100,19 +97,6 @@ def delete_user(user_id):
         print(f"Error deleting user: {e}")
         return False, "Database error occurred"
 
-def update_user_role(user_id, new_role):
-    try:
-        if new_role not in ('admin', 'user'):
-            return False, "Invalid role. Allowed: admin, user"
-        with db_cursor() as cursor:
-            cursor.execute("UPDATE users SET role = %s WHERE user_id = %s", (new_role, user_id))
-            if cursor.rowcount == 0:
-                return False, "User not found"
-            return True, f"User role updated to {new_role}"
-    except Exception as e:
-        print(f"Error updating user role: {e}")
-        return False, "Database error occurred"
-
 def sort_users(sort_by=None, order=None):
     try:
         if not sort_by:
@@ -128,7 +112,7 @@ def sort_users(sort_by=None, order=None):
         if order not in ('ASC', 'DESC'):
             raise ValueError("Sort order must be ASC or DESC")
 
-        sql = f"SELECT user_id, username, email, role, created_at FROM users ORDER BY {sort_by} {order}"
+        sql = f"SELECT user_id, username, email, created_at FROM users ORDER BY {sort_by} {order}"
         with db_cursor() as cursor:
             cursor.execute(sql)
             return cursor.fetchall()

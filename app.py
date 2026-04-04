@@ -1,11 +1,13 @@
 import os
 
 from flask import Flask, render_template
+from json_util import ShelfJSONProvider
 from routes.main_route import main_bp
 from routes.user_routes import user_bp
 from routes.admin_route import admin_bp
 
 app = Flask(__name__)
+app.json = ShelfJSONProvider(app)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-change-me-in-production')
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
